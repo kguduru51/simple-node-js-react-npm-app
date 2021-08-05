@@ -6,6 +6,8 @@ pipeline {
         }
     }
     environment {
+        HOME = '.'
+        //npm_config_cache = 'npm-cache'
         CI = 'true'
     }
     stages {
@@ -26,5 +28,14 @@ pipeline {
                 sh './jenkins/scripts/kill.sh'
             }
         }
+       stage ('Pause to Test Docker for Debugging') {
+       steps {
+         echo "Taking approval from PROD manager"
+         timeout(time: 7, unit: 'DAYS') {
+         input message: 'Do you want to proceed to PROD?', submitter: 'admin,manager_userid'
+         }
+       }
+     }
+
     }
 }
